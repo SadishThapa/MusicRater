@@ -1,15 +1,18 @@
 // app/layout.tsx
-import Footer from '@/components/layout/Footer';
-import Header from '@/components/layout/Header';
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google'; // Example font import
+import Footer from '../components/layout/Footer';
+import Header from '../components/layout/Header';
 import './globals.css';
 
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
-  title: 'Rate Beat 🎶 - Music Rating Website',
+  title: 'Soundly',
   description: 'Rate and review your favorite music on a scalable microservices platform.',
+  icons: {
+    icon: '/favicon.ico',          // default
+  },
 };
 
 export default function RootLayout({

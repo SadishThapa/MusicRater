@@ -1,36 +1,81 @@
-// app/page.tsx
+// app/page.tsx (Assuming the Home Screen is at the root)
+import { MusicItem } from '@/app/types/music';
 import AlbumCard from '@/components/music/AlbumCard';
-import { MusicItem } from '@/types/music';
 
-// Mock data now uses the MusicItem interface for type safety
-const trendingAlbums: MusicItem[] = [
-  { id: '1', title: "After Hours", artist: "The Weeknd", rating: 4.6, reviewCount: 5200, imageUrl: "https://via.placeholder.com/300/404E8A/FFFFFF?text=Album+1" },
-  { id: '2', title: "Good Kid, M.A.A.D City", artist: "Kendrick Lamar", rating: 4.8, reviewCount: 8100, imageUrl: "https://via.placeholder.com/300/5E8A40/FFFFFF?text=Album+2" },
-  { id: '3', title: "Lover", artist: "Taylor Swift", rating: 4.2, reviewCount: 6500, imageUrl: "https://via.placeholder.com/300/8A406F/FFFFFF?text=Album+3" },
-  { id: '4', title: "Currents", artist: "Tame Impala", rating: 4.5, reviewCount: 4100, imageUrl: "https://via.placeholder.com/300/8A8A40/FFFFFF?text=Album+4" },
-  { id: '5', title: "Dark Side of the Moon", artist: "Pink Floyd", rating: 4.9, reviewCount: 9500, imageUrl: "https://via.placeholder.com/300/404040/FFFFFF?text=Album+5" },
-  { id: '6', title: "Lemonade", artist: "Beyoncé", rating: 4.7, reviewCount: 7800, imageUrl: "https://via.placeholder.com/300/8A4040/FFFFFF?text=Album+6" },
+// --- MOCK DATA ---
+const mockRecentAlbums: MusicItem[] = [
+    { id: "1", title: "After Hours", artist: "The Weeknd", averageRating: 9.0, reviewCount: 1, imageUrl: "https://upload.wikimedia.org/wikipedia/en/c/c1/The_Weeknd_-_After_Hours.png", releaseDate: "2020-03-20" },
+    { id: "4", title: "Currents", artist: "Tame Impala", averageRating: 8.5, reviewCount: 1, imageUrl: "https://upload.wikimedia.org/wikipedia/en/9/9b/Tame_Impala_-_Currents.png", releaseDate: "2015-07-17" },
+    { id: "3", title: "Lover", artist: "Taylor Swift", averageRating: 7.0, reviewCount: 1, imageUrl: "https://upload.wikimedia.org/wikipedia/en/c/cd/Taylor_Swift_-_Lover.png", releaseDate: "2019-08-23" },
+    { id: "2", title: "Melodrama", artist: "Lorde", averageRating: 9.5, reviewCount: 1, imageUrl: "https://upload.wikimedia.org/wikipedia/en/e/e3/Lorde_-_Melodrama.png", releaseDate: "2017-06-16" },
+    { id: "5", title: "DAMN.", artist: "Kendrick Lamar", averageRating: 9.2, reviewCount: 1, imageUrl: "https://upload.wikimedia.org/wikipedia/en/5/51/Kendrick_Lamar_-_Damn.png", releaseDate: "2017-04-14" },
+    { id: "6", title: "Punisher", artist: "Phoebe Bridgers", averageRating: 8.8, reviewCount: 1, imageUrl: "https://upload.wikimedia.org/wikipedia/en/b/b8/Phoebe_Bridgers_-_Punisher.png", releaseDate: "2020-06-18" },
 ];
 
-export default function Home() {
-  return (
-    <section>
-      <h1 className="text-4xl font-bold mb-8 text-purple-300">
-        🔥 Trending Now
-      </h1>
-      
-      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
-        {trendingAlbums.map((album) => (
-          <AlbumCard 
-            key={album.id} 
-            album={album} 
-          />
-        ))}
-      </div>
-      
-      <p className="text-center text-gray-500 mt-12">
-        **This data is hardcoded. Next, we will connect to your Java Spring Boot Catalog Service!**
-      </p>
-    </section>
-  );
+// New Mock Data for Hot Albums (Could be sorted by high review count/average score)
+const mockHotAlbums: MusicItem[] = [
+    { id: "7", title: "The Dark Side of the Moon", artist: "Pink Floyd", averageRating: 9.8, reviewCount: 500, imageUrl: "https://upload.wikimedia.org/wikipedia/en/d/d4/The_Dark_Side_of_the_Moon.png", releaseDate: "1973-03-01" },
+    { id: "8", title: "Thriller", artist: "Michael Jackson", averageRating: 9.4, reviewCount: 350, imageUrl: "https://upload.wikimedia.org/wikipedia/en/6/63/Michael_Jackson_-_Thriller.png", releaseDate: "1982-11-30" },
+    { id: "9", title: "Abbey Road", artist: "The Beatles", averageRating: 9.7, reviewCount: 420, imageUrl: "https://upload.wikimedia.org/wikipedia/en/4/42/Beatles_-_Abbey_Road.jpg", releaseDate: "1969-09-26" },
+    { id: "10", title: "Lemonade", artist: "Beyoncé", averageRating: 9.6, reviewCount: 310, imageUrl: "https://upload.wikimedia.org/wikipedia/en/1/13/Lemonade_%28album%29_-_Beyonc%C3%A9.png", releaseDate: "2016-04-23" },
+];
+
+
+// --- REUSABLE ALBUM SECTION COMPONENT ---
+interface AlbumSectionProps {
+    albums: MusicItem[];
+    title: string;
+}
+
+// A reusable component for rendering any list of albums
+const AlbumSection = ({ albums, title }: AlbumSectionProps) => (
+    <div className="space-y-6">
+        <h2 className="text-3xl font-bold text-white border-b border-gray-700 pb-2">{title}</h2>
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-6">
+            {albums.map((album) => (
+                <AlbumCard key={album.id} album={album} />
+            ))}
+        </div>
+    </div>
+);
+
+
+export default function HomePage() {
+    return (
+        <div className="space-y-16 pt-12 max-w-7xl mx-auto">
+            
+            {/* 1. New: Hero/Welcome Section */}
+            <div className="relative bg-gray-900 p-12 rounded-xl overflow-hidden shadow-xl border border-gray-700/50">
+                <div className="absolute inset-0 bg-gradient-to-br from-[#4A47A3]/30 to-gray-800/30"></div>
+                <div className="relative z-10 text-center space-y-4">
+                    <h1 className="text-6xl font-extrabold text-white tracking-tight">
+                        Discover Great Music
+                    </h1>
+                    <p className="text-xl text-gray-300 max-w-3xl mx-auto italic">
+                        Rate, review, and track your favorite albums. See what the community is listening to and reviewing right now.
+                    </p>
+                    <button className="mt-4 px-6 py-3 bg-[#8D8CE7] text-white font-semibold rounded-lg shadow-lg hover:bg-[#6A68C3] transition duration-300">
+                        Start Exploring
+                    </button>
+                </div>
+            </div>
+
+            {/* 2. Hot Albums Section (New) */}
+            <div className="pt-4"> 
+                <AlbumSection 
+                    albums={mockHotAlbums} 
+                    title="🔥 Community Hot Picks" 
+                />
+            </div>
+
+            {/* 3. Recently Added Section (Adapted) */}
+            <div className="pt-4"> 
+                <AlbumSection 
+                    albums={mockRecentAlbums} 
+                    title="New Releases & Recent Activity" 
+                />
+            </div>
+            
+        </div>
+    );
 }
