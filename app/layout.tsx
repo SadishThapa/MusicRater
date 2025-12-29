@@ -15,6 +15,12 @@ export const metadata: Metadata = {
   },
 };
 
+// app/layout.tsx
+// ... imports
+
+// app/layout.tsx
+// ... imports and metadata
+
 export default function RootLayout({
   children,
 }: {
@@ -22,13 +28,26 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className={inter.className}>
-      {/* Apply global dark mode colors to the body */}
       <body className="bg-[#121212] text-white antialiased min-h-screen flex flex-col">
-        <Header />
-        {/* Main content area: uses flex-grow to push footer down */}
+        {/* 1. FIXED HEADER WRAPPER */}
+        {/* We wrap the Header in a fixed container with high z-index and full width */}
+        <div className="fixed top-0 w-full z-20">
+          <Header />
+        </div>
+
+        {/* 2. HEADER PLACEHOLDER/SPACER */}
+        {/* This empty div takes up space (h-20) in the normal flow to push content down. 
+            Its height MUST match the fixed header's actual height. 
+            Since you used pt-20 on main, let's assume the header is h-20 (80px). 
+            If your header is shorter (e.g., h-16), adjust this to h-16 and pt/mt on main accordingly. */}
+        <div className="h-20"></div> 
+        
+        {/* 3. MAIN CONTENT (Adjusted) */}
+        {/* We REMOVE the pt-20 from here since the h-20 spacer above already pushes it down */}
         <main className="flex-grow p-4 md:p-8 max-w-7xl w-full mx-auto">
           {children}
         </main>
+        
         <Footer />
       </body>
     </html>

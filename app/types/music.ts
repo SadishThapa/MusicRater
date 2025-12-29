@@ -40,5 +40,22 @@ export interface User {
   avatarUrl: string;
 }
 
+
+export interface Album {
+  album_name: string;
+  artist: string;
+  release_date: string;
+  genre: string;
+  label: string;
+  producer: string;
+  description: string;
+  total_length: string;
+  cover_image: string;
+  playcount: number | null;
+  listeners: number | null;
+  tags: string[];
+  tracks: Track[];
+}
+
 // app/types/user.ts
 
